@@ -39,11 +39,61 @@
 </template>
 
 <script>
+import {computed, onMounted, ref} from "vue";
 export default {
+  setup(){
+    onMounted(() =>{
+      newHeroRef.value.focus();
+    })
+
+    const heroesCount = computed({
+      get: () => dcHeroes.value.length,
+    })
+    const newHeroRef = ref();
+    const newHero = ref("");
+    const dcHeroes = ref([  
+      {name: "Super Girl"},
+      {name: "Flash"},
+      {name: "Batman"},
+      {name: "Arrow"},
+      {name: "SuperMan"},
+    ]);
+
+    function removeHero(index){
+      dcHeroes.value =  dcHeroes.value.filter((hero, i)  => i != index);
+    }
+
+    function addHero(){
+      if(newHero.value){
+        dcHeroes.value.push({name: newHero.value});
+        newHero.value = "";
+      }
+    }
+
+    return {
+      newHero,
+      dcHeroes,
+      removeHero,
+      addHero,
+      newHeroRef,
+      heroesCount
+    }
+  },
+  data(){
+    return{
+      isDisabled: true,
+      
+      fname: "Hello",
+      lname: "World",
+      
+      
+    }
+  },
+
   computed:{
-    heroesCount(){
-      return this.dcHeroes.length;
-    },
+    // heroesCount(){
+    //   return this.dcHeroes.length;
+    // },
 
     // fullname:{
     //     get(){
@@ -56,40 +106,13 @@ export default {
     //     }
     // },
   },
-  mounted(){
-    console.log(this.$refs.newHeroRef.focus())
-  },
-  methods:{
-    addHero(){
-      if(this.newHero){
-        this.dcHeroes.push({name: this.newHero});
-        this.newHero = "";
-      }
-    },
-    removeHero(index){
-      this.dcHeroes =  this.dcHeroes.filter((hero, i)  => i != index);
-       
-    },
-    // setFullName(){
-    //   this.fullname = 'Ericson Muros'
-    // }
-  },
-  data(){
-    return{
-      isDisabled: true,
-      newHero: "",
-      fname: "Hello",
-      lname: "World",
-      dcHeroes:[  
-        {name: "Super Girl"},
-        {name: "Flash"},
-        {name: "Batman"},
-        {name: "Arrow"},
-        {name: "SuperMan"},
-      ],
-      
-    }
-  },
+  // methods:{
+   
+  //   // setFullName(){
+  //   //   this.fullname = 'Ericson Muros'
+  //   // }
+  // },
+  
 }
  
 </script>
