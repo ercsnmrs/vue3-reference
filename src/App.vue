@@ -5,10 +5,14 @@
   <div class="w-full flex">
     <router-view/>
   </div>
-  <Login @close-login="isLoginOpen=false" v-if="isLoginOpen"/>
+  <teleport to='body'>
+    <Login @close-login="isLoginOpen=false" v-if="isLoginOpen"/>
+  </teleport>
 </template>
 
 <script>
+// Benefits of teleport if there is a problem in css, div and such
+
 import AppHeader from "./components/AppHeader"
 import Login from "./components/LoginModal"
 import firebase from './utilities/firebase'
@@ -18,7 +22,7 @@ export default {
     AppHeader,
     Login
   },
-  
+   
   data(){
     return{
       isLoginOpen: false,
