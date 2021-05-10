@@ -25,6 +25,7 @@
         <input class="border rounded"
             v-model="newHero" 
             placeholder="Type Hero Name Here"
+            ref="newHeroRef"
         />
 
         <button class="ml-5 p-2 border rounded bg-gradient-to-r from-red-700 to-pink-500 text-white"
@@ -54,6 +55,9 @@ export default {
     //       this.lname = values[1];
     //     }
     // },
+  },
+  mounted(){
+    console.log(this.$refs.newHeroRef.focus())
   },
   methods:{
     addHero(){

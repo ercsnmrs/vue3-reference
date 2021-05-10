@@ -1,7 +1,7 @@
 <template>
         <section 
             class="z-20 h-screen w-screen bg-gray-500 fixed top-0 opacity-50"
-            @click="$emit('close-login')"
+            @click="close"
         ></section>
         <div class="absolute inset-0">
             <div class="flex h-full">
@@ -10,10 +10,16 @@
                     <h1 class="text-2xl text-left">
                         Login
                     </h1>
-                    <form class="p-2 my-2" @submit.prevent="">
+                    <GoogleLogin @close-login-from-google="close"/>
+                    <p class="my-3 text-center">
+                        Or
+                    </p>
+                    <form class="p-2 my-2" @submit.prevent="submit">
                         <div class="my-4">
                             <label class="text-left" for="">Email Or Username</label>
-                            <input class="rounded shadow p-2 w-full" 
+                            <input 
+                            ref="emailRef"
+                            class="rounded shadow p-2 w-full" 
                             placeholder="Enter Email Or Username"
                             v-model="form.email"
                             type="text" />
@@ -32,7 +38,12 @@
                                 bg-gradient-to-r from-red-800 to bg-pink-600
                                 text-white p-2" 
                                 type="submit">
-                                Login
+                                <span v-if="!this.isLoading">
+                                    Login
+                                </span>
+                                <span v-else>
+                                   ⏳ loading... 
+                                </span>
                             </button>
                          </div>
                     </form>
@@ -44,25 +55,44 @@
 
 <script>
 import firebase from "../utilities/firebase"
+import GoogleLogin from '../components/Login/GoogleLogin'
 export default {
+    components:{
+        GoogleLogin,
+    },
     data(){
         return{
            form:{
                email:'',
-               password:'', 
-           }
+               password:'',
+           },
+           isLoading:false, 
         }
+    },
+    mounted(){
+        this.$refs.emailRef.focus()
     },
     methods: {
         submit(){
-            firebase.auth().signInWithEmailAndPassword(this.form.email,this.form.password).
-            then(res =>{
-                console.log(res)
-            }).catch(e =>{
-                console.log(e)
+            this.isLoading = true;
+            firebase
+                .auth()
+                .signInWithEmailAndPassword(this.form.email,this.form.password)
+                .then(() =>{
+                    this.form.email = "";
+                    this.form.password = "";
+                    this.isLoading = false;
+                    this.close()
+                }).catch(e =>{
+                    this.isLoading = false, 
+                    this.close()
+                    console.log(e)
             })
+        }, 
+        close(){
+            this.$emit('close-login')
         }
-    }, 
+    }
 }
 </script>
 

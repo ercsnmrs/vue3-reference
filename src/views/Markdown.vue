@@ -8,6 +8,7 @@
             <article class="w-1/2 border">
             <!-- @input = v-on:input -->
                 <textarea class="w-full h-full" 
+                    ref="markdownTextArea"
                     :value="text"
                     @input="update">
                 </textarea>
@@ -30,7 +31,9 @@ export default {
             text: "",
         }
     },
-   
+    mounted(){
+        this.$refs.markdownTextArea.focus()
+    },
     computed:{  
         markedText(){
             return marked(this.text)
